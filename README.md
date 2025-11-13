@@ -8,3 +8,5 @@ This is a small script written in js that uses the electron library to render a 
 
 # WHY
 - i made this as a little experiment for chatGPT v 5.1 i had already made a CLI tool to do this and wanted to see if AI could add the interface (hence why it says vibecoded cus i totally coded the vibe)
+
+<img width="667" height="602" alt="image" src="https://github.com/user-attachments/assets/45ad94c9-381c-41a6-99e7-b9219180ff84" />

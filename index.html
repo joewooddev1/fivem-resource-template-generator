@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FiveM Resource Creator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* VS Code–like dark theme */
+    :root {
+      --bg: #1e1e1e;
+      --panel: #252526;
+      --panel-light: #2d2d2d;
+      --border: #3c3c3c;
+      --primary: #6a5acd;
+      --primary-hover: #5a4ac2;
+      --text: #d4d4d4;
+      --text-muted: #9e9e9e;
+      --accent: #007acc;
+      --danger: #f44747;
+      --radius: 10px;
+      --transition: 0.15s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      /* background: radial-gradient(circle at top, #252526 0, #1e1e1e 45%, #151515 100%); */
+      color: var(--text);
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 24px;
+      border-radius: 24px;
+    }
+
+    h1 {
+      font-weight: 300;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      background: rgba(37, 37, 38, 0.98);
+      border: 1px solid var(--border);
+      padding: 24px 24px 18px;
+      border-radius: 16px;
+      max-width: 640px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .field-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-light);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition), transform var(--transition);
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0, 122, 204, 0.35);
+      background: #333338;
+      transform: translateY(-1px);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 14px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    button.secondary {
+      background: #2f3135;
+    }
+
+    button.secondary:hover {
+      background: #35373c;
+    }
+
+    .status {
+      margin-top: 16px;
+      min-height: 24px;
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+    }
+
+    .status.ok {
+      color: var(--accent);
+    }
+
+    .status.err {
+      color: var(--danger);
+    }
+
+    .paths {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .path-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .path-label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .path-value {
+      font-family: "Consolas", "Fira Code", monospace;
+      font-size: 0.8rem;
+      word-break: break-all;
+      margin-bottom: 8px;
+    }
+
+    .icon-button {
+      width: 32px;
+      height: 28px;
+      border-radius: 8px;
+      padding: 0;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Titlebar Container */
+    .titlebar {
+    width: 100%;
+    height: 70px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(30, 30, 30, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-app-region: drag;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+    margin-bottom: 25px;
+    }
+
+    /* Prevent buttons from being draggable */
+    .window-controls {
+    display: flex;
+    -webkit-app-region: no-drag;
+    }
+
+    .window-controls button {
+    width: 46px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: #d4d4d4;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+    }
+
+    .window-controls button:hover {
+    background: rgba(255,255,255,0.1);
+    }
+
+    #close-btn:hover {
+    background: rgba(255, 65, 54, 0.3);
+    color: white;
+    }
+
+    /* Title (centered) */
+    .titlebar-center {
+    text-align: center;
+    flex: 1;
+    }
+
+    .title-text {
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: #eaeaea;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    }
+
+    .subtitle-text {
+    font-size: 0.8rem;
+    color: #9e9e9e;
+    opacity: 0.8;
+    }
+
+    /* side space filler so center stays centered */
+    .titlebar-left {
+    width: 100px;
+    }
+
+
+  </style>
+</head>
+<body>
+    <div class="titlebar">
+    <div class="titlebar-left drag-region"></div>
+
+    <div class="titlebar-center drag-region">
+        <div class="title-text">FiveM Resource Template Generator</div>
+        <div class="subtitle-text">vibe coded by sieve</div>
+    </div>
+
+    <div class="window-controls">
+        <button id="min-btn">—</button>
+        <button id="close-btn">×</button>
+    </div>
+    </div>
+
+  <div class="container">
+    <div class="field-group">
+      <label for="name">Resource Name</label>
+      <input id="name" type="text" placeholder="e.g. infinite-hud">
+    </div>
+
+    <div class="field-group">
+      <label for="description">Description</label>
+      <input id="description" type="text" placeholder="What does this resource do?">
+    </div>
+
+    <div class="field-group">
+      <label for="author">Author</label>
+      <input id="author" type="text" placeholder="Default: infinite randy">
+    </div>
+
+    <div class="button-row">
+      <button id="btn-mlo">
+        <span>🏠 Create MLO Resource</span>
+      </button>
+      <button id="btn-script" class="secondary">
+        <span>💻 Create Script Resource</span>
+      </button>
+    </div>
+
+    <div class="paths" id="paths">
+      <div class="path-label-row">
+        <span class="path-label">Script Output</span>
+        <button id="reset-script" class="secondary icon-button">📁</button>
+      </div>
+      <div id="scriptPath" class="path-value">Loading…</div>
+
+      <div class="path-label-row" style="margin-top:6px;">
+        <span class="path-label">MLO Output</span>
+        <button id="reset-mlo" class="secondary icon-button">📁</button>
+      </div>
+      <div id="mloPath" class="path-value">Loading…</div>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+    <script>
+    function getData() {
+      return {
+        name: document.getElementById("name").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        author: document.getElementById("author").value.trim() || "infinite randy",
+      };
+    }
+
+    function setStatus(message, ok = true) {
+      const el = document.getElementById("status");
+      el.textContent = message || "";
+      el.classList.remove("ok", "err");
+      el.classList.add(ok ? "ok" : "err");
+      console.log("[STATUS]", message); // debug
+    }
+
+    async function safeCall(fn, label) {
+      try {
+        if (!window.api || typeof window.api[fn] !== "function") {
+          const msg = `window.api.${fn} is not available`;
+          console.error(msg);
+          setStatus(`❌ Renderer API error: ${msg}`, false);
+          return null;
+        }
+        return await window.api[fn]();
+      } catch (err) {
+        console.error(`Error calling ${label || fn}:`, err);
+        setStatus(`❌ ${label || fn} failed: ${err.message || err}`, false);
+        return null;
+      }
+    }
+
+    async function initPaths() {
+      try {
+        if (!window.api || typeof window.api.getSettings !== "function") {
+          document.getElementById("scriptPath").textContent = "API not available";
+          document.getElementById("mloPath").textContent = "API not available";
+          console.error("window.api.getSettings is not defined");
+          return;
+        }
+
+        const s = await window.api.getSettings();
+        console.log("[getSettings]", s);
+
+        document.getElementById("scriptPath").textContent =
+          (s && s.scriptDir) || "Not set";
+        document.getElementById("mloPath").textContent =
+          (s && s.mloDir) || "Not set";
+      } catch (err) {
+        console.error("initPaths error:", err);
+        document.getElementById("scriptPath").textContent =
+          "Error loading settings";
+        document.getElementById("mloPath").textContent =
+          "Error loading settings";
+      }
+    }
+
+    // Create MLO
+    document.getElementById("btn-mlo").addEventListener("click", async () => {
+      if (!window.api || typeof window.api.createMLO !== "function") {
+        setStatus("❌ createMLO API not available", false);
+        console.error("window.api.createMLO is not defined");
+        return;
+      }
+
+      try {
+        const data = getData();
+        const msg = await window.api.createMLO(data);
+        const isOk = msg && msg.startsWith("✅");
+        setStatus(msg || "Unknown response from createMLO", isOk);
+        initPaths();
+      } catch (err) {
+        console.error("createMLO error:", err);
+        setStatus(`❌ createMLO failed: ${err.message || err}`, false);
+      }
+    });
+
+    // Create Script
+    document.getElementById("btn-script").addEventListener("click", async () => {
+      if (!window.api || typeof window.api.createScript !== "function") {
+        setStatus("❌ createScript API not available", false);
+        console.error("window.api.createScript is not defined");
+        return;
+      }
+
+      try {
+        const data = getData();
+        const msg = await window.api.createScript(data);
+        const isOk = msg && msg.startsWith("✅");
+        setStatus(msg || "Unknown response from createScript", isOk);
+        initPaths();
+      } catch (err) {
+        console.error("createScript error:", err);
+        setStatus(`❌ createScript failed: ${err.message || err}`, false);
+      }
+    });
+
+    // Change Script output folder
+    document
+      .getElementById("reset-script")
+      .addEventListener("click", async () => {
+        const msg = await safeCall("pickScriptDir", "pickScriptDir");
+        if (!msg) return;
+        const isOk = msg.startsWith("✅");
+        setStatus(msg, isOk);
+        initPaths();
+      });
+
+    // Change MLO output folder
+    document
+      .getElementById("reset-mlo")
+      .addEventListener("click", async () => {
+        const msg = await safeCall("pickMloDir", "pickMloDir");
+        if (!msg) return;
+        const isOk = msg.startsWith("✅");
+        setStatus(msg, isOk);
+        initPaths();
+      });
+
+    // Initial load
+    initPaths();
+
+        document.getElementById("close-btn").addEventListener("click", () => {
+    window.windowControls.close();
+    });
+
+    document.getElementById("min-btn").addEventListener("click", () => {
+    window.windowControls.minimize();
+    });
+  </script>
+</body>
+</html>

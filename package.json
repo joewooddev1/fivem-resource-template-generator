@@ -1,0 +1,40 @@
+{
+  "name": "fivem-resource-creator",
+  "version": "1.0.0",
+  "description": "A modern UI generator for FiveM MLO and script resources.",
+  "author": "sieve",
+  "main": "main.js",
+
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+
+  "dependencies": {},
+
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^26.0.12"
+  },
+
+  "build": {
+    "appId": "com.sieve.fivemcreator",
+    "productName": "FiveM Resource Creator",
+
+    "directories": {
+      "output": "dist"
+    },
+
+    "files": [
+      "**/*"
+    ],
+
+    "asar": true,
+    "compression": "maximum",
+
+    "win": {
+      "target": "portable",
+      "icon": "sievetmplatecrtoricon.ico"
+    }
+  }
+}
